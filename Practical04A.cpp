@@ -1,47 +1,63 @@
-#include <iostream>
-#include <vector>
-using namespace std;
+#include <bits/stdc++.h> 
+using namespace std; 
 
-void findSubsets(vector<int>& nums) {
-    int n = nums.size();
+// Function to find all subsets of given set. Any repeated 
+// subset is considered only once in the output 
+vector<vector<int> > findPowerSet(vector<int>& nums) 
+{ 
+	// Size of array to set bit 
+	int bits = nums.size(); 
 
-    // Sort the array manually to handle duplicates
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            if (nums[j] > nums[j + 1]) {
-                swap(nums[j], nums[j + 1]);
-            }
-        }
-    }
+	// Total number of subsets = pow(2, 
+	// sizeof(arr)) 
+	unsigned int pow_set_size = pow(2, bits); 
 
-    cout << "{ ";
-    for (int mask = 0; mask < (1 << n); mask++) {
-        vector<int> subset;
-        bool skip = false;
+	// Sort to avoid adding permutation of 
+	// the substring 
+	sort(nums.begin(), nums.end()); 
+	vector<vector<int> > ans; 
 
-        for (int i = 0; i < n; i++) {
-            // Check if the i-th bit is set
-            if (mask & (1 << i)) {
-                // Skip duplicates in the same subset
-                if (i > 0 && (mask & (1 << (i - 1))) == 0 && nums[i] == nums[i - 1]) {
-                    skip = true;
-                    break;
-                }
-                subset.push_back(nums[i]);
-            }
-        }
+	// To store subset as a list to 
+	// avoid adding exact duplicates 
+	vector<string> list; 
 
-        if (!skip) {
-            cout << "{ ";
-            for (int val : subset) cout << val << " ";
-            cout << "} ";
-        }
-    }
-    cout << "}" << endl;
-}
+	// Counter 000..0 to 111..1 
+	for (int counter = 0; counter < pow_set_size; 
+		counter++) { 
+		vector<int> subset; 
+		string temp = ""; 
 
-int main() {
-    vector<int> S = {1, 2, 2};
-    findSubsets(S);
-    return 0;
-}
+		// Check for the current bit in the counter 
+		for (int j = 0; j < bits; j++) { 
+			if (counter & (1 << j)) { 
+				subset.push_back(nums[j]); 
+
+				// Add special character to separate 
+				// integers 
+				temp += to_string(nums[j]) + '$'; 
+			} 
+		} 
+
+		if (find(list.begin(), list.end(), temp) 
+			== list.end()) { 
+			ans.push_back(subset); 
+			list.push_back(temp); 
+		} 
+	} 
+
+	return ans; 
+} 
+int main() 
+{ 
+	vector<int> arr{ 10, 12, 12 }; 
+
+	vector<vector<int> > power_set = findPowerSet(arr); 
+
+	for (int i = 0; i < power_set.size(); i++) { 
+		for (int j = 0; j < power_set[i].size(); j++) 
+			cout << power_set[i][j] << " "; 
+		cout << endl; 
+	} 
+
+	return 0; 
+} 
