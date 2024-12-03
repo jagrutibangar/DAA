@@ -5,7 +5,6 @@
 
 using namespace std;
 
-// Helper function to determine if we can complete tasks within D days with the given maxWorkPerDay
 bool canComplete(const vector<int>& tasks, int D, int maxWorkPerDay) {
     int days = 1;  // Start with the first day
     int currentWork = 0;  // Current amount of work done in the current day
